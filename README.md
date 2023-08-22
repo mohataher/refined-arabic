@@ -40,9 +40,9 @@ python c4_dataset_script/c4_script.py \
     --spark-archives c4-env.tar.gz#environment
 ```
 
-## Make colossal cleaned Chinese web corpus
+## Make colossal cleaned Arabic web corpus
 
-Referring to the method of C4, there is a data processing pipeline building for a cleaned Chinese web corpus. It includes web page download, Chinese recognition, heuristics text filter method, toxic recognition and filter, and Repetition Removal used in Google/DeepMind MassiveText.
+Referring to the method of C4, there is a data processing pipeline building for a cleaned Arabic web corpus. It includes web page download, Arabic recognition, heuristics text filter method, toxic recognition and filter, and Repetition Removal used in Google/DeepMind MassiveText.
 
 ## 1. Download the WET crawl archive index file
 
@@ -55,11 +55,11 @@ wget -r --no-parent https://data.commoncrawl.org/crawl-data/${CRAWL_ARCHIVE_ID}/
 
 *You can get CRAWL_ARCHIVE_ID [here](https://commoncrawl.org/the-data/get-started/). For instance: CC-MAIN-2022-49.*
 
-## 2. Run download and Chinese screening script on Spark
+## 2. Run download and Arabic screening script on Spark
 
 ```bash
 spark-submit --master ${SPARK_MASTER_ADDR} \
-    Chinese/download_web_docs.py \
+    Arabic/download_web_docs.py \
         --wet-paths ./data.commoncrawl.org/crawl-data/${CRAWL_ARCHIVE_ID}/wet.paths.gz \
         --output ./download-docs
 ```
@@ -73,16 +73,16 @@ Refer to the c4 heuristics method. I used the following strategies for cleaning 
 contained at least five words.
 - Removed any page that contained any word on the "List of Dirty, Naughty, Obscene
 or Otherwise Bad Words."
-- Many of the scraped pages contained Chinese garbled, so we removed any line with the garbled characters. For example: "[-]|□|■|�".
+- Many of the scraped pages contained Arabic garbled, so we removed any line with the garbled characters. For example: "[-]|□|■|�".
 
 ```bash
 cat ./download-docs/*/part-* | \
-    python Chinese/filter_out_bad_lines.py \
-        --badwords_filepath ./badwords/zh \
+    python Arabic/filter_out_bad_lines.py \
+        --badwords_filepath ./badwords/ar \
          > clean_docs.jsonl
 ```
 
-*About 93.57% of documents are filtered out in this stage. You can see samples of filtered documents [here](data/Chinese_bad-lines_samples.jsonl).*
+*About 93.57% of documents are filtered out in this stage. You can see samples of filtered documents [here](data/Arabic_bad-lines_samples.jsonl).*
 
 ## 4. Remove duplicated text
 
@@ -90,12 +90,12 @@ To eliminate duplicate text, I use the text deduplication strategy from C4. The 
 
 ```bash
 spark-submit --master ${SPARK_MASTER_ADDR} \
-    Chinese/remove_duplicate_text.py \
+    Arabic/remove_duplicate_text.py \
         --input clean_docs.jsonl \
         --output ./deduplicated_text
 ```
 
-*About 62.67% of documents are filtered out in this stage. You can see samples of filtered lines [here](data/Chinese_Remove-Duplicated-Text_samples.jsonl).*
+*About 62.67% of documents are filtered out in this stage. You can see samples of filtered lines [here](data/Arabic_Remove-Duplicated-Text_samples.jsonl).*
 
 ## 5. Remove documents that are over self-repeating - Repetition Removal in DeepMind MassiveText
 
@@ -103,9 +103,9 @@ Check the percentage of duplicate content in the web document, and the program w
 
 ```bash
 spark-submit --master ${SPARK_MASTER_ADDR} \
-    Chinese/repetition_removal.py \
+    Arabic/repetition_removal.py \
         --input clean_docs.jsonl \
         --output ./repetition_removal_output
 ```
 
-*About 21.21% of documents are filtered out in this stage. You can see samples of filtered documents [here](data/Chinese_Repetition-Removal_samples.jsonl).*
+*About 21.21% of documents are filtered out in this stage. You can see samples of filtered documents [here](data/Arabic_Repetition-Removal_samples.jsonl).*
