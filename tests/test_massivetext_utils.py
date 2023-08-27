@@ -2,12 +2,14 @@ import unittest
 
 from pyspark.sql import SparkSession
 from c4_dataset_script.massivetext_utils import docs_dedup, is_repetition_removal
+import findspark
 
 
-class SparkTestCase(unittest.TestCase):
+class MassiveTextTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        findspark.init()
         cls.spark = (SparkSession
                      .builder
                      .master("local[*]")
