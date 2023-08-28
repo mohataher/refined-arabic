@@ -14,7 +14,7 @@ class OscarDownloader:
         self.num_proc = num_proc
 
     def download_oscar(self, oscar='oscar-corpus/OSCAR-2301', oscar_subset='ar'):
-        return load_dataset(oscar, oscar_subset)
+        return load_dataset(oscar, oscar_subset, num_proc=self.num_proc)
         pass
 
     def convert_to_commoncrawl_json(self, row):
