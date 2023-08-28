@@ -50,12 +50,16 @@ class OscarDownloader:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--oscar-dataset", nargs="+", required=True)
-    parser.add_argument("--oscar-dataset-subset", nargs="+", required=True)
+    parser.add_argument("--oscar-dataset", required=True)
+    parser.add_argument("--oscar-dataset-subset", required=True)
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--num-processors", default=2, type=int, required=False)
 
     args = parser.parse_args()
+
+    print('downloading dataset', args.oscar_dataset, 'with subset',
+          args.oscar_dataset_subset, 'with processors', args.num_processors,
+          'on folder', args.output_dir)
 
     oscar_downloader = OscarDownloader(args.oscar_dataset, args.oscar_dataset_subset,
                                        args.output_dir, num_proc=args.num_processors)
