@@ -6,8 +6,8 @@ import multiprocessing
 class JsonlFileManager:
     def __init__(self, base_dir):
         self.base_dir = base_dir
-        self.current_folder = -1
-        self.current_file = -1
+        self.current_folder = 0
+        self.current_file = 0
         self.buffer = []
         self.current_file_count = 0
         self.current_folder_count = 0
@@ -51,3 +51,6 @@ class JsonlFileManager:
 
     def close(self):
         self.flush_buffer()
+
+    def __del__(self):
+        self.close()
