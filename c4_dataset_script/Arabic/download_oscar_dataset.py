@@ -5,13 +5,17 @@ import json
 
 from datasets import load_dataset
 
+from c4_dataset_script.json_file_manager import JsonlFileManager
+
 
 class OscarDownloader:
     def __init__(self, dataset_name, dataset_name_subset, output_dir, num_proc):
+        self.dataset = None
         self.dataset_name = dataset_name
         self.dataset_name_subset = dataset_name_subset
         self.output_dir = output_dir
         self.num_proc = num_proc
+        self.saver = JsonlFileManager(output_dir)
 
     def download_oscar(self, oscar='oscar-corpus/OSCAR-2301', oscar_subset='ar'):
         return load_dataset(oscar, oscar_subset, num_proc=self.num_proc)
@@ -33,13 +37,7 @@ class OscarDownloader:
     def save_as_json(self, row):
         commoncrawl_json = self.convert_to_commoncrawl_json(row)
         # Generate a unique filename based on the URL
-        uri = commoncrawl_json['url']
-        url_hash = hash(uri)
-        output_filename = os.path.join(self.output_dir, f"{url_hash}.json")
-
-        # Save the JSON data to the file
-        with open(output_filename, "w", encoding="utf-8") as json_file:
-            json.dump(commoncrawl_json, json_file, ensure_ascii=False)
+        self.saver.save_dict(commoncrawl_json)
 
     def convert_oscar_to_json(self):
         if not hasattr(self, 'dataset') or self.dataset is None:

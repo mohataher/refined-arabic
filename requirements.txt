@@ -8,6 +8,5 @@ nltk~=3.8.1
 jieba~=0.42.1
 py4j~=0.10.9.7
 tensorflow-datasets==4.9.2
-apache_beam
 requests==2.21.0
 datasets~=2.14.4
