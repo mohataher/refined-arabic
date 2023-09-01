@@ -28,3 +28,7 @@ def test_process_file():
     mock_args.bad_words_ratio = 0.005
     process_file('./sample_files/part-00001', mock_args, manager)
 
+
+if __name__ == "__main__":
+    unittest.main()
+
