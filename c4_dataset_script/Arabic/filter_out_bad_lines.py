@@ -92,8 +92,7 @@ def process_file(file, args, manager):
                 bad_lines += output
 
             if len(bad_lines) > 0:
-                j["text"] = '\n'.join(bad_lines)
-                print(json.dumps(j, ensure_ascii=False))
+                print(json.dumps(bad_lines, ensure_ascii=False))
 
 
 def main():
